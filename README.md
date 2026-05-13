@@ -1,4 +1,4 @@
-# QuickLoan - Micro Loan Platform
+# BoA - Micro Loan Platform
 
 A mobile-first micro-loan platform built for Ghana. Users register, verify with live camera, apply for loans on a 6-day cycle, and repay via Mobile Money.
 
