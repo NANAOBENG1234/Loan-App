@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum LoanStatus {
+  pending
+  approved
+  active
+  repaid
+  overdue
+  rejected
+  expired
+}
+
+enum RepaymentStatus {
+  pending
+  paid
+  overdue
+}
+
+enum VerificationStatus {
+  pending
+  approved
+  rejected
+}
+
+enum VerificationType {
+  selfie
+  ghana_card_front
+  ghana_card_back
+}
+
+model User {
+  id            String        @id @default(cuid())
+  fullName      String
+  phone         String        @unique
+  email         String?
+  password      String
+  avatarUrl     String?
+  verified      Boolean       @default(false)
+  isActive      Boolean       @default(true)
+  loanLevel     Int           @default(1)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  loans         Loan[]
+  repayments    Repayment[]
+  verifications Verification[]
+  notifications Notification[]
+}
+
+model Loan {
+  id            String        @id @default(cuid())
+  userId        String
+  amount        Float
+  interestRate  Float         @default(0)
+  status        LoanStatus    @default(pending)
+  purpose       String?
+  dueDate       DateTime?
+  approvedAt    DateTime?
+  approvedBy    String?
+  repaidAt      DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repayments    Repayment[]
+}
+
+model Repayment {
+  id        String           @id @default(cuid())
+  loanId    String
+  userId    String
+  amount    Float
+  dueDate   DateTime
+  paidAt    DateTime?
+  status    RepaymentStatus  @default(pending)
+  method    String?
+  reference String?
+  clearedBy String?
+  clearedAt DateTime?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  loan      Loan             @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id          String             @id @default(cuid())
+  userId      String
+  type        VerificationType
+  imageUrl    String
+  status      VerificationStatus @default(pending)
+  adminNote   String?
+  reviewedBy  String?
+  submittedAt DateTime          @default(now())
+  reviewedAt  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("info")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

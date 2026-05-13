@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply font-sans bg-gray-50 text-secondary-800 antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-glass rounded-2xl;
+  }
+  .btn-primary {
+    @apply bg-primary-500 text-white px-6 py-3 rounded-xl font-semibold text-sm
+           hover:bg-primary-600 active:scale-[0.98] transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed shadow-soft;
+  }
+  .btn-secondary {
+    @apply bg-secondary-100 text-secondary-700 px-6 py-3 rounded-xl font-semibold text-sm
+           hover:bg-secondary-200 active:scale-[0.98] transition-all duration-200;
+  }
+  .btn-ghost {
+    @apply text-secondary-600 px-4 py-2 rounded-xl font-medium text-sm
+           hover:bg-secondary-100 active:scale-[0.98] transition-all duration-200;
+  }
+  .input-field {
+    @apply w-full px-4 py-3.5 bg-secondary-50 border border-secondary-200 rounded-xl text-sm
+           focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500
+           placeholder:text-secondary-400 transition-all duration-200;
+  }
+  .card {
+    @apply bg-white rounded-2xl border border-secondary-100 p-5 shadow-soft;
+  }
+  .chip {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+  .chip-pending { @apply chip bg-yellow-100 text-yellow-700; }
+  .chip-active { @apply chip bg-blue-100 text-blue-700; }
+  .chip-repaid { @apply chip bg-green-100 text-green-700; }
+  .chip-overdue { @apply chip bg-red-100 text-red-700; }
+  .chip-rejected { @apply chip bg-red-100 text-red-700; }
+  .chip-approved { @apply chip bg-primary-100 text-primary-700; }
+  .chip-paid { @apply chip bg-green-100 text-green-700; }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-700;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
