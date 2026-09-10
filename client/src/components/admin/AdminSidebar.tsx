@@ -7,6 +7,7 @@ const links = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
   { href: "/admin/customers", label: "Customers", icon: "👥" },
   { href: "/admin/loans", label: "Loans", icon: "💰" },
+  { href: "/admin/verifications", label: "Verifications", icon: "🪪" },
   { href: "/admin/repayments", label: "Repayments", icon: "💳" },
 ];
 
