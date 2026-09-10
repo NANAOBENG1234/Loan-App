@@ -20,16 +20,19 @@ export function startReminderJob() {
           },
         },
         include: {
-          user: { select: { email: true, firstName: true } },
+          user: { select: { email: true, fullName: true } },
         },
       });
 
       for (const repayment of repayments) {
-        await emailService.sendRepaymentReminder(
-          repayment.user.email,
-          repayment.amount,
-          repayment.dueDate.toLocaleDateString()
-        );
+        if (repayment.user.email) {
+          await emailService.sendRepaymentReminder(
+            repayment.user.email,
+            repayment.user.fullName,
+            repayment.amount,
+            repayment.dueDate.toLocaleDateString()
+          );
+        }
       }
 
       if (repayments.length > 0) {

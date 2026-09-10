@@ -37,4 +37,23 @@ export class EmailService {
       logger.error("Failed to send welcome email:", error);
     }
   }
+
+  async sendRepaymentReminder(email: string, fullName: string, amount: number, dueDate: string) {
+    if (!email) return;
+    try {
+      await sendMail(
+        email,
+        `Repayment Reminder - GHS ${amount} due on ${dueDate}`,
+        `
+        <h2>Repayment Reminder</h2>
+        <p>Hi ${fullName},</p>
+        <p>This is a friendly reminder that your repayment of <strong>GHS ${amount}</strong> is due on <strong>${dueDate}</strong>.</p>
+        <p>Please ensure timely payment to avoid penalties and maintain your loan level.</p>
+        <p>Thank you,<br/>QuickLoan Team</p>
+        `
+      );
+    } catch (error) {
+      logger.error("Failed to send repayment reminder:", error);
+    }
+  }
 }
