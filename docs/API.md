@@ -20,7 +20,9 @@ Base: `http://localhost:5000/api`
 - `GET /loans/:id` - Auth required
 
 ## Payments
-- `POST /payments/initiate` - `{ loanId, amount, method? }` - Auth required. `amount` must match the loan's stored due amount (principal + interest) exactly; otherwise returns 400.
+- `POST /payments/initiate` - `{ loanId, amount, method? }` - Auth required. `amount` must match the loan's stored due amount (principal + interest) exactly; otherwise returns 400. Returns `{ repayment, checkout }` where `checkout` contains `{ provider, paymentUrl?, instructions?, verified, confirmed }`. With the mock provider the payment is auto-confirmed; with a live gateway a `paymentUrl` is returned for the client to open.
+- `GET /payments/methods` - Returns `{ gateway, live, methods }` describing the active provider and supported mobile money details.
+- `POST /payments/webhook` - Gateway webhook endpooint. Body must be raw JSON (route uses `express.raw`). Signature verified against the active provider (`verif-hash` for Flutterwave); idempotent; marks the matching repayment paid.
 - `GET /payments` - Auth required
 - `GET /payments/:loanId` - Auth required
 
