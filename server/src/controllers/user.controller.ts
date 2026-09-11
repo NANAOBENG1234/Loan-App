@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
 import prisma from "../config/db";
-import { updateProfileSchema } from "../utils/validators";
+import { updateProfileSchema, changePasswordSchema } from "../utils/validators";
 
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
   try {
@@ -30,6 +31,28 @@ export async function updateProfile(req: Request, res: Response, next: NextFunct
             : "Profile already in use",
       });
     }
+    next(error);
+  }
+}
+
+export async function changePassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { currentPassword, newPassword } = changePasswordSchema.parse(req.body);
+
+    const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const valid = await bcrypt.compare(currentPassword, user.password);
+    if (!valid) return res.status(401).json({ message: "Current password is incorrect" });
+
+    const hashed = await bcrypt.hash(newPassword, 12);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: hashed },
+    });
+
+    res.json({ message: "Password updated successfully" });
+  } catch (error) {
     next(error);
   }
 }

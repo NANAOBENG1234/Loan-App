@@ -18,6 +18,15 @@ export const updateProfileSchema = z.object({
   email: z.string().email("Invalid email address").nullable().optional(),
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
+  newPassword: z.string().min(6, "New password must be at least 6 characters"),
+});
+
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Password is required"),
+});
+
 export const loanApplicationSchema = z.object({
   amount: z.number().positive("Amount must be positive").max(10000, "Maximum loan amount is GHS 10,000"),
   purpose: z.string().optional(),
