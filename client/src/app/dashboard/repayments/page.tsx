@@ -97,11 +97,17 @@ export default function RepaymentsPage() {
 
       {activeLoan && (
         <Modal isOpen={showRepayment} onClose={() => setShowRepayment(false)} title="Repay Loan">
-          <RepaymentForm
-            loanId={activeLoan.id}
-            amount={activeLoan.amount + (activeLoan.amount * activeLoan.interestRate) / 100}
-            onSuccess={() => { setShowRepayment(false); paymentService.getAll().then(setRepayments); }}
-          />
+          {(() => {
+            const pending = repayments.find((r) => r.loanId === activeLoan.id && r.status === "pending");
+            const due = pending?.amount ?? activeLoan.amount + (activeLoan.amount * activeLoan.interestRate) / 100;
+            return (
+              <RepaymentForm
+                loanId={activeLoan.id}
+                amount={due}
+                onSuccess={() => { setShowRepayment(false); paymentService.getAll().then(setRepayments); }}
+              />
+            );
+          })()}
         </Modal>
       )}
     </div>
