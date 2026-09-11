@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
 import prisma from "../config/db";
-import { updateProfileSchema, changePasswordSchema } from "../utils/validators";
+import { updateProfileSchema, changePasswordSchema, deleteAccountSchema } from "../utils/validators";
 
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
   try {
@@ -52,6 +52,35 @@ export async function changePassword(req: Request, res: Response, next: NextFunc
     });
 
     res.json({ message: "Password updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteAccount(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { password } = deleteAccountSchema.parse(req.body);
+
+    const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return res.status(401).json({ message: "Incorrect password" });
+
+    const activeLoan = await prisma.loan.findFirst({
+      where: { userId: user.id, status: { in: ["active", "approved", "pending"] } },
+    });
+    if (activeLoan) {
+      return res.status(409).json({ message: "Deactivate active loans before deleting your account" });
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isActive: false },
+    });
+
+    res.clearCookie("token");
+    res.json({ message: "Account deactivated" });
   } catch (error) {
     next(error);
   }
