@@ -2,20 +2,21 @@ import prisma from "../config/db";
 import { calculateLoanRepayment } from "../utils/calculateLoan";
 import { getLoanLevel, getNextLevel } from "../constants/loanLevels";
 import { getIO } from "../config/socket";
+import { HttpError } from "../utils/HttpError";
 
 export class LoanService {
   async apply(userId: string, amount: number, purpose?: string) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw new Error("User not found");
+    if (!user) throw new HttpError(404, "User not found");
 
     const activeLoan = await prisma.loan.findFirst({
       where: { userId, status: { in: ["active", "approved", "pending"] } },
     });
-    if (activeLoan) throw new Error("You already have an active loan. Repay it first.");
+    if (activeLoan) throw new HttpError(409, "You already have an active loan. Repay it first.");
 
     const level = getLoanLevel(user.loanLevel);
     if (amount > level.maxAmount) {
-      throw new Error(`Your maximum loan amount is GHS ${level.maxAmount} at ${level.name} level`);
+      throw new HttpError(400, `Your maximum loan amount is GHS ${level.maxAmount} at ${level.name} level`);
     }
 
     const repayment = calculateLoanRepayment(amount, user.loanLevel);
@@ -54,14 +55,14 @@ export class LoanService {
       where: { id: loanId, userId },
       include: { repayments: { orderBy: { dueDate: "asc" } } },
     });
-    if (!loan) throw new Error("Loan not found");
+    if (!loan) throw new HttpError(404, "Loan not found");
     return loan;
   }
 
   async approveLoan(loanId: string, adminId: string) {
     const loan = await prisma.loan.findUnique({ where: { id: loanId } });
-    if (!loan) throw new Error("Loan not found");
-    if (loan.status !== "pending") throw new Error("Loan is not pending");
+    if (!loan) throw new HttpError(404, "Loan not found");
+    if (loan.status !== "pending") throw new HttpError(409, "Loan is not pending");
 
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 6);

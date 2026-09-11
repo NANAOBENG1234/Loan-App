@@ -43,8 +43,8 @@ export class PaymentService {
       include: { loan: true },
     });
 
-    if (!repayment) throw new Error("Repayment not found");
-    if (repayment.status === "paid") throw new Error("Already cleared");
+    if (!repayment) throw new HttpError(404, "Repayment not found");
+    if (repayment.status === "paid") throw new HttpError(409, "Already cleared");
 
     const updated = await prisma.repayment.update({
       where: { id: repaymentId },
