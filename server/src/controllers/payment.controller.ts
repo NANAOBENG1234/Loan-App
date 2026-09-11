@@ -1,13 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../config/db";
 import { PaymentService } from "../services/payment.service";
+import { repaymentSchema } from "../utils/validators";
 import { MOMO_DETAILS } from "../constants/payment";
 
 const paymentService = new PaymentService();
 
 export async function initiatePayment(req: Request, res: Response, next: NextFunction) {
   try {
-    const { loanId, amount, method } = req.body;
+    const { loanId, amount, method } = repaymentSchema.parse(req.body);
     const result = await paymentService.recordRepayment(loanId, req.user!.id, amount, method);
 
     res.json({
