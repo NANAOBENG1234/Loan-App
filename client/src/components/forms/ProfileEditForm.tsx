@@ -25,6 +25,11 @@ export function ProfileEditForm({ user, onCancel, onSaved, onError }: ProfileEdi
   const [fieldErrors, setFieldErrors] = useState<{ fullName?: string; phone?: string; email?: string }>({});
   const [loading, setLoading] = useState(false);
 
+  const isDirty =
+    form.fullName !== (user.fullName || "") ||
+    form.phone !== (user.phone || "") ||
+    form.email !== (user.email || "");
+
   const validate = () => {
     const errors: typeof fieldErrors = {};
     if (form.fullName.trim().length < 3) errors.fullName = "Full name must be at least 3 characters";
@@ -77,10 +82,11 @@ export function ProfileEditForm({ user, onCancel, onSaved, onError }: ProfileEdi
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
         placeholder="you@example.com"
+        helperText="Used for payment receipts and reminders"
         error={fieldErrors.email}
       />
       <div className="flex gap-3 pt-2">
-        <Button type="submit" isLoading={loading}>Save Changes</Button>
+        <Button type="submit" isLoading={loading} disabled={!isDirty}>Save Changes</Button>
         <Button type="button" variant="ghost" onClick={onCancel} disabled={loading}>Cancel</Button>
       </div>
     </form>
