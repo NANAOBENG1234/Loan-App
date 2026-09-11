@@ -1,8 +1,11 @@
 import prisma from "../config/db";
 import { getIO } from "../config/socket";
 import { LoanService } from "./loan.service";
+import { HttpError } from "../utils/HttpError";
 
 const loanService = new LoanService();
+
+const AMOUNT_TOLERANCE = 0.01;
 
 export class PaymentService {
   async recordRepayment(loanId: string, userId: string, amount: number, method?: string) {
@@ -11,16 +14,20 @@ export class PaymentService {
       include: { repayments: { where: { status: "pending" }, orderBy: { dueDate: "asc" } } },
     });
 
-    if (!loan) throw new Error("Loan not found");
-    if (loan.status === "repaid") throw new Error("Loan already repaid");
+    if (!loan) throw new HttpError(404, "Loan not found");
+    if (loan.status === "repaid") throw new HttpError(409, "Loan already repaid");
 
     const pending = loan.repayments[0];
-    if (!pending) throw new Error("No pending repayments found");
+    if (!pending) throw new HttpError(409, "No pending repayments found");
+
+    const due = pending.amount;
+    if (Math.abs(amount - due) > AMOUNT_TOLERANCE) {
+      throw new HttpError(400, `Payment amount must be exactly GHS ${due.toFixed(2)}`);
+    }
 
     const repayment = await prisma.repayment.update({
       where: { id: pending.id },
       data: {
-        amount,
         method: method || "mobile_money",
         status: "pending",
         reference: `MM-${Date.now()}`,
