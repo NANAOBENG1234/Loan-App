@@ -8,6 +8,9 @@ Base: `http://localhost:5000/api`
 - `POST /auth/logout`
 - `GET /auth/profile` - Auth required
 
+## User
+- `PUT /users/profile` - `{ fullName?, phone?, email? }` - Auth required. Validates Ghana phone + email format; returns 409 if phone/email already taken.
+
 ## Loans
 - `POST /loans/apply` - `{ amount, purpose? }` - Auth required
 - `GET /loans` - Auth required
