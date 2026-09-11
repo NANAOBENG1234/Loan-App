@@ -7,6 +7,11 @@ export const paymentService = {
     return res.data;
   },
 
+  async getMethods() {
+    const res = await api.get("/payments/methods");
+    return res.data;
+  },
+
   async getAll(): Promise<Repayment[]> {
     const res = await api.get("/payments");
     return res.data;

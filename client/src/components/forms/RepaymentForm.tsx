@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { Toast } from "@/components/ui/Toast";
@@ -13,14 +13,28 @@ interface RepaymentFormProps {
   onSuccess: () => void;
 }
 
+interface Checkout {
+  provider: string;
+  paymentUrl?: string | null;
+  instructions?: string | null;
+  verified?: boolean;
+  confirmed?: boolean;
+}
+
 export function RepaymentForm({ loanId, amount, onSuccess }: RepaymentFormProps) {
   const [showModal, setShowModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [checkout, setCheckout] = useState<Checkout | null>(null);
   const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
+
+  useEffect(() => {
+    paymentService.getMethods().catch(() => {});
+  }, []);
 
   const handleProviderClick = (provider: string) => {
     setSelectedProvider(provider);
+    setCheckout(null);
     setShowModal(true);
   };
 
@@ -28,14 +42,35 @@ export function RepaymentForm({ loanId, amount, onSuccess }: RepaymentFormProps)
     setLoading(true);
     try {
       const result = await paymentService.initiate(loanId, amount, selectedProvider || undefined);
-      setToast({ show: true, message: "Payment recorded. Awaiting confirmation.", type: "success" });
-      setShowModal(false);
-      setTimeout(onSuccess, 1000);
+      const next: Checkout = result.checkout;
+      setCheckout(next);
+
+      if (next.confirmed) {
+        setToast({ show: true, message: "Payment confirmed.", type: "success" });
+        setShowModal(false);
+        setTimeout(onSuccess, 1000);
+        return;
+      }
+
+      if (next.paymentUrl) {
+        window.open(next.paymentUrl, "_blank", "noopener,noreferrer");
+        setToast({ show: true, message: "Payment initiated. Complete it on the gateway page.", type: "success" });
+        setTimeout(onSuccess, 1200);
+      } else {
+        setToast({ show: true, message: "Payment recorded. Awaiting confirmation.", type: "success" });
+        setShowModal(false);
+        setTimeout(onSuccess, 1000);
+      }
     } catch (err: any) {
       setToast({ show: true, message: err.response?.data?.message || "Payment failed", type: "error" });
+      setCheckout(null);
     } finally {
       setLoading(false);
     }
+  };
+
+  const openGateway = () => {
+    if (checkout?.paymentUrl) window.open(checkout.paymentUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -69,26 +104,44 @@ export function RepaymentForm({ loanId, amount, onSuccess }: RepaymentFormProps)
               <p className="font-medium mb-2">Send exactly:</p>
               <p className="text-2xl font-bold text-primary-700">GHS {amount.toFixed(2)}</p>
             </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-secondary-500">Provider</span>
-                <span className="font-medium">{MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.name}</span>
+
+            {checkout?.paymentUrl ? (
+              <div className="space-y-3">
+                <div className="bg-soft-green rounded-xl p-3 text-sm text-secondary-700">
+                  <p className="font-semibold mb-1">Gateway checkout created</p>
+                  <p>You&apos;ll complete the payment on the gateway page. Your loan clears automatically once the payment is confirmed.</p>
+                </div>
+                {checkout.instructions && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-700">{checkout.instructions}</div>
+                )}
+                <Button onClick={openGateway} fullWidth size="lg">
+                  Continue on {MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.name} Gateway
+                </Button>
               </div>
-              <div className="flex justify-between">
-                <span className="text-secondary-500">Number</span>
-                <span className="font-medium">{MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.number}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-secondary-500">Account Name</span>
-                <span className="font-medium">{MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.accountName}</span>
-              </div>
-            </div>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-700">
-              After sending payment, click confirm below. The admin will verify and clear your loan.
-            </div>
-            <Button onClick={handleConfirm} isLoading={loading} fullWidth size="lg">
-              I&apos;ve Sent the Payment
-            </Button>
+            ) : (
+              <>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-secondary-500">Provider</span>
+                    <span className="font-medium">{MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-secondary-500">Number</span>
+                    <span className="font-medium">{MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.number}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-secondary-500">Account Name</span>
+                    <span className="font-medium">{MOMO_DETAILS[selectedProvider as keyof typeof MOMO_DETAILS]?.accountName}</span>
+                  </div>
+                </div>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 text-xs text-yellow-700">
+                  After sending payment, click confirm below. The admin will verify and clear your loan.
+                </div>
+                <Button onClick={handleConfirm} isLoading={loading} fullWidth size="lg">
+                  {checkout?.confirmed ? "Payment Confirmed" : "I&apos;ve Sent the Payment"}
+                </Button>
+              </>
+            )}
           </div>
         )}
       </Modal>
