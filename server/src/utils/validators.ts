@@ -12,6 +12,12 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+export const updateProfileSchema = z.object({
+  fullName: z.string().min(3, "Full name must be at least 3 characters").optional(),
+  phone: z.string().regex(/^0[235]\d{8}$/, "Invalid Ghana phone number").optional(),
+  email: z.string().email("Invalid email address").nullable().optional(),
+});
+
 export const loanApplicationSchema = z.object({
   amount: z.number().positive("Amount must be positive").max(10000, "Maximum loan amount is GHS 10,000"),
   purpose: z.string().optional(),
