@@ -10,6 +10,8 @@ Base: `http://localhost:5000/api`
 
 ## User
 - `PUT /users/profile` - `{ fullName?, phone?, email? }` - Auth required. Validates Ghana phone + email format; returns 409 if phone/email already taken.
+- `PUT /users/password` - `{ currentPassword, newPassword }` - Auth required. Verifies current password, re-hashes new one.
+- `DELETE /users/account` - `{ password }` - Auth required. Soft-deletes the account (isActive=false). Blocked with 409 if an active/approved/pending loan exists.
 
 ## Loans
 - `POST /loans/apply` - `{ amount, purpose? }` - Auth required
