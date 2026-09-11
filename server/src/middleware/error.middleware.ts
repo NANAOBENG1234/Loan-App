@@ -4,6 +4,10 @@ import { logger } from "../utils/logger";
 export function errorHandler(err: Error, _req: Request, res: Response, _next: NextFunction) {
   logger.error("Error:", err.message);
 
+  if ((err as any).status && Number((err as any).status) < 500) {
+    return res.status((err as any).status).json({ message: err.message });
+  }
+
   if (err.name === "ZodError") {
     const zod = err as any;
     return res.status(400).json({
