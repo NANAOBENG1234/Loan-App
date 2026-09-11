@@ -20,7 +20,7 @@ Base: `http://localhost:5000/api`
 - `GET /loans/:id` - Auth required
 
 ## Payments
-- `POST /payments/initiate` - `{ loanId, amount, method? }` - Auth required
+- `POST /payments/initiate` - `{ loanId, amount, method? }` - Auth required. `amount` must match the loan's stored due amount (principal + interest) exactly; otherwise returns 400.
 - `GET /payments` - Auth required
 - `GET /payments/:loanId` - Auth required
 
