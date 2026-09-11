@@ -15,7 +15,7 @@ export default function AdminCustomersPage() {
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [newLevel, setNewLevel] = useState(1);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const loadData = () => adminService.getUsers().then(setUsers).finally(() => setLoading(false));
 

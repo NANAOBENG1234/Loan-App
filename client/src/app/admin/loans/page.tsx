@@ -14,7 +14,7 @@ import { STATUS_CONFIG } from "@/utils/constants";
 export default function AdminLoansPage() {
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const loadLoans = () => adminService.getLoans().then(setLoans).finally(() => setLoading(false));
 

@@ -15,7 +15,7 @@ export function LoginForm() {
   const [form, setForm] = useState({ phone: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "error" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "error" as "success" | "error" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

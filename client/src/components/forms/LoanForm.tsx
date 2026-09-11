@@ -19,7 +19,7 @@ export function LoanForm({ userLevel, onSuccess }: LoanFormProps) {
   const [purpose, setPurpose] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const presetAmounts = [level.maxAmount * 0.25, level.maxAmount * 0.5, level.maxAmount * 0.75, level.maxAmount].map(
     (a) => Math.round(a)

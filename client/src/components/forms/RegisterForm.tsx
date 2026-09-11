@@ -16,7 +16,7 @@ export function RegisterForm() {
   const [form, setForm] = useState({ fullName: "", phone: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const pwdStrength = form.password ? getPasswordStrength(form.password) : null;
 

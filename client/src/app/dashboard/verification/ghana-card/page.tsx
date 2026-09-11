@@ -15,7 +15,7 @@ export default function GhanaCardPage() {
   const [backImage, setBackImage] = useState<string | null>(null);
   const [step, setStep] = useState<"front" | "back">("front");
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const captureFront = (data: string) => {
     setFrontImage(data);

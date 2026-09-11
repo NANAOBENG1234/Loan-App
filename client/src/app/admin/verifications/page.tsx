@@ -21,7 +21,7 @@ export default function AdminVerificationsPage() {
   const [loading, setLoading] = useState(true);
   const [rejectTarget, setRejectTarget] = useState<Verification | null>(null);
   const [rejectNote, setRejectNote] = useState("");
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const loadData = () => adminService.getVerifications().then(setVerifications).finally(() => setLoading(false));
 

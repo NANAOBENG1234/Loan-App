@@ -20,7 +20,7 @@ export function Navbar() {
               <Link href="/dashboard" className="text-sm text-gray-600 hover:text-gray-900">
                 Dashboard
               </Link>
-              <span className="text-sm text-gray-500">{user?.firstName}</span>
+              <span className="text-sm text-gray-500">{user?.fullName}</span>
               <Button variant="ghost" size="sm" onClick={logout}>
                 Logout
               </Button>

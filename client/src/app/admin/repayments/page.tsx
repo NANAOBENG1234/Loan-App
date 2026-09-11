@@ -14,7 +14,7 @@ import { STATUS_CONFIG } from "@/utils/constants";
 export default function AdminRepaymentsPage() {
   const [repayments, setRepayments] = useState<Repayment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const loadData = () => adminService.getRepayments().then(setRepayments).finally(() => setLoading(false));
 

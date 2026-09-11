@@ -13,7 +13,7 @@ export default function SelfiePage() {
   const router = useRouter();
   const [imageData, setImageData] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const handleUpload = async () => {
     if (!imageData) return;

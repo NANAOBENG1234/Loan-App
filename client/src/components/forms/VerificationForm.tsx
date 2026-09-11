@@ -14,7 +14,7 @@ interface VerificationFormProps {
 export function VerificationForm({ type, imageData, onSuccess }: VerificationFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const handleSubmit = async () => {
     setLoading(true);

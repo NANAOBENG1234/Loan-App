@@ -17,7 +17,7 @@ export function RepaymentForm({ loanId, amount, onSuccess }: RepaymentFormProps)
   const [showModal, setShowModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: "", type: "success" as const });
+  const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
 
   const handleProviderClick = (provider: string) => {
     setSelectedProvider(provider);
