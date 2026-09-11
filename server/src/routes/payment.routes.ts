@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth.middleware";
-import { initiatePayment, getMyRepayments, getLoanRepayments } from "../controllers/payment.controller";
+import { initiatePayment, getMyRepayments, getLoanRepayments, getPaymentMethods, handleWebhook } from "../controllers/payment.controller";
 
 const router = Router();
 
 router.post("/initiate", authenticate, initiatePayment);
+router.get("/methods", getPaymentMethods);
+router.post("/webhook", handleWebhook);
 router.get("/", authenticate, getMyRepayments);
 router.get("/:loanId", authenticate, getLoanRepayments);
 

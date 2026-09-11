@@ -21,6 +21,7 @@ app.use(cors({
     : "http://localhost:3000",
   credentials: true,
 }));
+app.use("/api/payments/webhook", express.raw({ type: "*/*" }));
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
