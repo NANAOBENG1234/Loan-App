@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../config/db";
 import { PaymentService } from "../services/payment.service";
+import { MOMO_DETAILS } from "../constants/payment";
 
 const paymentService = new PaymentService();
 
@@ -12,11 +13,7 @@ export async function initiatePayment(req: Request, res: Response, next: NextFun
     res.json({
       message: "Payment recorded. Awaiting admin confirmation.",
       repayment: result,
-      paymentDetails: {
-        mtn: { number: "055 123 4567", name: "QuickLoan Ghana Ltd" },
-        vodafone: { number: "020 123 4567", name: "QuickLoan Ghana Ltd" },
-        airteltigo: { number: "027 123 4567", name: "QuickLoan Ghana Ltd" },
-      },
+      paymentDetails: MOMO_DETAILS,
     });
   } catch (error) {
     next(error);

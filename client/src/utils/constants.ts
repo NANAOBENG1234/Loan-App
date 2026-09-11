@@ -20,7 +20,7 @@ export const STATUS_CONFIG: Record<string, { color: string; label: string }> = {
 };
 
 export const MOMO_DETAILS = {
-  mtn: { name: "MTN Mobile Money", number: "055 123 4567", accountName: "QuickLoan Ghana Ltd", color: "#FFC107" },
-  vodafone: { name: "Vodafone Cash", number: "020 123 4567", accountName: "QuickLoan Ghana Ltd", color: "#E53935" },
-  airteltigo: { name: "AirtelTigo Money", number: "027 123 4567", accountName: "QuickLoan Ghana Ltd", color: "#1E88E5" },
+  mtn: { name: "MTN Mobile Money", number: "055 123 4567", accountName: "BoA Micro Finance Ltd", color: "#FFC107" },
+  vodafone: { name: "Vodafone Cash", number: "020 123 4567", accountName: "BoA Micro Finance Ltd", color: "#E53935" },
+  airteltigo: { name: "AirtelTigo Money", number: "027 123 4567", accountName: "BoA Micro Finance Ltd", color: "#1E88E5" },
 };
