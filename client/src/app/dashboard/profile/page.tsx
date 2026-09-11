@@ -10,12 +10,14 @@ import { Toast } from "@/components/ui/Toast";
 import { ProfileEditForm } from "@/components/forms/ProfileEditForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
+import { authService } from "@/services/auth.service";
 import { formatDate } from "@/utils/formatDate";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
   const user = useAuthStore((s) => s.user);
+  const setUser = useAuthStore((s) => s.setUser);
   const logout = useAuthStore((s) => s.logout);
   const [editing, setEditing] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "", type: "success" as "success" | "error" });
@@ -23,6 +25,12 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!isLoading && !isAuthenticated) router.push("/login");
   }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      authService.getProfile().then(setUser).catch(() => undefined);
+    }
+  }, [isAuthenticated, setUser]);
 
   if (isLoading) return <Loader fullScreen />;
 
