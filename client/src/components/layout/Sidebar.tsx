@@ -7,8 +7,7 @@ const links = [
   { href: "/dashboard", label: "Overview", icon: "📊" },
   { href: "/dashboard/loans", label: "My Loans", icon: "💰" },
   { href: "/dashboard/repayments", label: "Repayments", icon: "💳" },
-  { href: "/dashboard/verification/selfie", label: "Verify Selfie", icon: "📷" },
-  { href: "/dashboard/verification/ghana-card", label: "Ghana Card", icon: "🪪" },
+  { href: "/dashboard/verification", label: "Verification", icon: "🪪" },
   { href: "/dashboard/profile", label: "Profile", icon: "👤" },
   { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
 ];
@@ -20,7 +19,7 @@ export function Sidebar() {
     <aside className="fixed left-0 top-16 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto hidden lg:block">
       <nav className="p-4 space-y-1">
         {links.map((link) => {
-          const isActive = pathname === link.href;
+          const isActive = pathname === link.href || (link.href !== "/dashboard" && pathname.startsWith(link.href));
           return (
             <Link
               key={link.href}
