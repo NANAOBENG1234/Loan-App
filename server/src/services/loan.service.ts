@@ -3,6 +3,9 @@ import { calculateLoanRepayment } from "../utils/calculateLoan";
 import { getLoanLevel, getNextLevel } from "../constants/loanLevels";
 import { getIO } from "../config/socket";
 import { HttpError } from "../utils/HttpError";
+import { NotificationService } from "./notification.service";
+
+const notificationService = new NotificationService();
 
 export class LoanService {
   async apply(userId: string, amount: number, purpose?: string) {
@@ -29,6 +32,13 @@ export class LoanService {
         status: "pending",
         purpose,
       },
+    });
+
+    await notificationService.create({
+      userId,
+      title: "Loan application submitted",
+      message: `Your application for GHS ${amount} is now under review.`,
+      type: "loan",
     });
 
     return { loan, repayment: { ...repayment, dueDate: repayment.dueDate.toISOString() }, level };
@@ -114,14 +124,33 @@ export class LoanService {
     const io = getIO();
     io.to(`user:${loan.userId}`).emit("loan:approved", { loanId, dueDate: dueDate.toISOString() });
 
+    await notificationService.create({
+      userId: loan.userId,
+      title: "Loan approved",
+      message: `Your loan of GHS ${loan.amount} is approved. Repay GHS ${(loan.amount + (loan.amount * loan.interestRate) / 100).toFixed(2)} by ${dueDate.toLocaleDateString()}.`,
+      type: "loan",
+    });
+
     return updated;
   }
 
   async rejectLoan(loanId: string) {
-    return prisma.loan.update({
+    const loan = await prisma.loan.findUnique({ where: { id: loanId }, select: { id: true, userId: true } });
+    const updated = await prisma.loan.update({
       where: { id: loanId },
       data: { status: "rejected" },
     });
+
+    if (loan) {
+      await notificationService.create({
+        userId: loan.userId,
+        title: "Loan application rejected",
+        message: "Your loan application was not approved at this time. You can try again with a lower amount.",
+        type: "loan",
+      });
+    }
+
+    return updated;
   }
 
   async upgradeUserLevel(userId: string) {

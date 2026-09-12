@@ -4,9 +4,11 @@ import prisma from "../config/db";
 import { generateToken } from "../utils/generateToken";
 import { LoanService } from "../services/loan.service";
 import { PaymentService } from "../services/payment.service";
+import { NotificationService } from "../services/notification.service";
 
 const loanService = new LoanService();
 const paymentService = new PaymentService();
+const notificationService = new NotificationService();
 
 export async function adminLogin(req: Request, res: Response, next: NextFunction) {
   try {
@@ -128,6 +130,13 @@ export async function approveVerification(req: Request, res: Response, next: Nex
       data: { verified: true },
     });
 
+    await notificationService.create({
+      userId: verification.userId,
+      title: "Verification approved",
+      message: "Your identity documents were approved. You are fully verified.",
+      type: "verification",
+    });
+
     res.json(verification);
   } catch (error) {
     next(error);
@@ -141,6 +150,14 @@ export async function rejectVerification(req: Request, res: Response, next: Next
       where: { id: req.params.id },
       data: { status: "rejected", adminNote, reviewedBy: req.admin!.id, reviewedAt: new Date() },
     });
+
+    await notificationService.create({
+      userId: verification.userId,
+      title: "Verification rejected",
+      message: `Your verification was rejected${adminNote ? `: ${adminNote}` : ". Please resubmit."}`,
+      type: "verification",
+    });
+
     res.json(verification);
   } catch (error) {
     next(error);

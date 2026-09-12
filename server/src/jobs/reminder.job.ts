@@ -2,8 +2,10 @@ import cron from "node-cron";
 import prisma from "../config/db";
 import { logger } from "../utils/logger";
 import { EmailService } from "../services/email.service";
+import { NotificationService } from "../services/notification.service";
 
 const emailService = new EmailService();
+const notificationService = new NotificationService();
 
 export function startReminderJob() {
   cron.schedule("0 8 * * *", async () => {
@@ -33,6 +35,12 @@ export function startReminderJob() {
             repayment.dueDate.toLocaleDateString()
           );
         }
+        await notificationService.create({
+          userId: repayment.userId,
+          title: "Repayment due tomorrow",
+          message: `GHS ${repayment.amount} is due by ${repayment.dueDate.toLocaleDateString()}.`,
+          type: "payment",
+        });
       }
 
       if (repayments.length > 0) {

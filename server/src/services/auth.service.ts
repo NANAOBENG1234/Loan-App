@@ -2,6 +2,9 @@ import bcrypt from "bcryptjs";
 import prisma from "../config/db";
 import { generateToken } from "../utils/generateToken";
 import { RegisterInput, LoginInput } from "../types/auth.types";
+import { NotificationService } from "./notification.service";
+
+const notificationService = new NotificationService();
 
 export class AuthService {
   async register(input: RegisterInput) {
@@ -19,6 +22,13 @@ export class AuthService {
         loanLevel: 1,
       },
       select: { id: true, fullName: true, phone: true, email: true, loanLevel: true, verified: true, createdAt: true },
+    });
+
+    await notificationService.create({
+      userId: user.id,
+      title: "Welcome to BoA Micro Finance",
+      message: "Complete identity verification to unlock your first loan.",
+      type: "welcome",
     });
 
     const token = generateToken({ id: user.id, phone: user.phone, role: "user" });

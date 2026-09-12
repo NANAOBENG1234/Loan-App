@@ -5,8 +5,10 @@ import { LoanService } from "./loan.service";
 import { HttpError } from "../utils/HttpError";
 import { getPaymentProvider } from "./payments";
 import { logger } from "../utils/logger";
+import { NotificationService } from "./notification.service";
 
 const loanService = new LoanService();
+const notificationService = new NotificationService();
 
 const AMOUNT_TOLERANCE = 0.01;
 
@@ -123,6 +125,13 @@ export class PaymentService {
 
     const io = getIO();
     io.to(`user:${userId}`).emit("loan:cleared", { loanId });
+
+    await notificationService.create({
+      userId,
+      title: "Loan fully repaid",
+      message: "Your loan is cleared. You can apply for a new loan at your next level.",
+      type: "payment",
+    });
   }
 
   /** Gateway webhook entry: signature-verified, idempotent. */

@@ -2,6 +2,9 @@ import cron from "node-cron";
 import prisma from "../config/db";
 import { getIO } from "../config/socket";
 import { logger } from "../utils/logger";
+import { NotificationService } from "../services/notification.service";
+
+const notificationService = new NotificationService();
 
 export function startExpireLoansJob() {
   cron.schedule("*/5 * * * *", async () => {
@@ -23,6 +26,12 @@ export function startExpireLoansJob() {
         const io = getIO();
         for (const loan of overdueLoans) {
           io.to(`user:${loan.userId}`).emit("loan:overdue", { loanId: loan.id });
+          await notificationService.create({
+            userId: loan.userId,
+            title: "Loan overdue",
+            message: "Your loan is now overdue. Please make your repayment as soon as possible.",
+            type: "payment",
+          });
         }
       }
     } catch (error) {
