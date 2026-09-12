@@ -7,17 +7,17 @@ async function main() {
   const password = await bcrypt.hash("admin123", 12);
 
   await prisma.admin.upsert({
-    where: { email: "admin@loanplatform.com" },
+    where: { email: "admin@boamicrofinance.com" },
     update: {},
     create: {
-      email: "admin@loanplatform.com",
+      email: "admin@boamicrofinance.com",
       password,
       name: "Super Admin",
       role: "superadmin",
     },
   });
 
-  console.log("Seed complete: admin created (admin@loanplatform.com / admin123)");
+  console.log("Seed complete: admin created (admin@boamicrofinance.com / admin123)");
 }
 
 main()

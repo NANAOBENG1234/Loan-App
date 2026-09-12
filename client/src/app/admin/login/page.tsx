@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
           <p className="text-sm text-secondary-500">Sign in to manage the platform</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="admin@loanplatform.com" />
+          <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="admin@boamicrofinance.com" />
           <Input label="Password" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Enter password" />
           {error && <p className="text-sm text-red-500 text-center">{error}</p>}
           <Button type="submit" isLoading={loading} fullWidth>Sign In</Button>

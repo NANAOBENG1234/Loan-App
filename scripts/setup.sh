@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "Setting up QuickLoan..."
+echo "Setting up BoA Micro Finance..."
 
 # Check deps
 command -v node >/dev/null 2>&1 || { echo "Node.js required"; exit 1; }

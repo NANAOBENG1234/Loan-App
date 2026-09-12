@@ -4,7 +4,7 @@ import { logger } from "../utils/logger";
 export class EmailService {
   async sendLoanRequestToAdmin(userName: string, phone: string, amount: number, level: number) {
     try {
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@loanplatform.com";
+      const adminEmail = process.env.ADMIN_EMAIL || "admin@boamicrofinance.com";
       const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
       await sendMail(
         adminEmail,
@@ -50,7 +50,7 @@ export class EmailService {
         <p>Hi ${fullName},</p>
         <p>This is a friendly reminder that your repayment of <strong>GHS ${amount}</strong> is due on <strong>${dueDate}</strong>.</p>
         <p>Please ensure timely payment to avoid penalties and maintain your loan level.</p>
-        <p>Thank you,<br/>QuickLoan Team</p>
+        <p>Thank you,<br/>The BoA Micro Finance Team</p>
         `
       );
     } catch (error) {

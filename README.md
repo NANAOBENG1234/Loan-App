@@ -26,7 +26,7 @@ npm run dev
 
 ## Admin Access
 - URL: http://localhost:3000/admin/login
-- Default: admin@loanplatform.com / admin123
+- Default: admin@boamicrofinance.com / admin123
 
 ## Loan Levels
 | Level | Max Amount | Interest |
