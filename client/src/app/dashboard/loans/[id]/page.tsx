@@ -111,6 +111,13 @@ export default function LoanDetailPage() {
               <p className="text-lg font-semibold">{loan.interestRate}%</p>
             </div>
           </div>
+          {loan.daysRemaining !== null && (loan.status === "active" || loan.status === "overdue") && (
+            <div className={`mt-4 bg-white/10 rounded-xl p-3 text-sm ${loan.status === "overdue" ? "text-yellow-200" : ""}`}>
+              {loan.status === "overdue"
+                ? `Payment overdue — settle to clear the loan`
+                : `Due in ${loan.daysRemaining} day${loan.daysRemaining === 1 ? "" : "s"}`}
+            </div>
+          )}
         </div>
 
         {/* Key facts */}
