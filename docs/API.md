@@ -17,7 +17,7 @@ Base: `http://localhost:5000/api`
 - `POST /loans/apply` - `{ amount, purpose? }` - Auth required
 - `GET /loans` - Auth required
 - `GET /loans/current` - Auth required
-- `GET /loans/:id` - Auth required
+- `GET /loans/:id` - Auth required. Returns the loan with repayments plus `totalDue`, `daysRemaining`, `level` (name/maxAmount/repaymentDays) and `nextLevel` (or null).
 
 ## Payments
 - `POST /payments/initiate` - `{ loanId, amount, method? }` - Auth required. `amount` must match the loan's stored due amount (principal + interest) exactly; otherwise returns 400. Returns `{ repayment, checkout }` where `checkout` contains `{ provider, paymentUrl?, instructions?, verified, confirmed }`. With the mock provider the payment is auto-confirmed; with a live gateway a `paymentUrl` is returned for the client to open.
