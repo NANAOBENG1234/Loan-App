@@ -30,8 +30,9 @@ export class EmailService {
     try {
       await sendMail(
         email,
-        "Welcome to QuickLoan - Your Trusted Loan Platform",
-        `<h1>Welcome, ${fullName}!</h1><p>Your account has been created. Apply for your first loan today.</p>`
+        "Welcome to BoA Micro Finance - Your Trusted Loan Platform",
+        `<h1>Welcome, ${fullName}!</h1><p>Your account has been created with BoA Micro Finance. Complete identity verification and apply for your first loan today.</p>
+        <p>Thank you,<br/>The BoA Micro Finance Team</p>`
       );
     } catch (error) {
       logger.error("Failed to send welcome email:", error);

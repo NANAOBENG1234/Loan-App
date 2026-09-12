@@ -3,9 +3,11 @@ import prisma from "../config/db";
 import { generateToken } from "../utils/generateToken";
 import { RegisterInput, LoginInput } from "../types/auth.types";
 import { NotificationService } from "./notification.service";
+import { EmailService } from "./email.service";
 import { IN_PROGRESS_LOAN_STATUSES } from "../constants/loan";
 
 const notificationService = new NotificationService();
+const emailService = new EmailService();
 
 export class AuthService {
   async register(input: RegisterInput) {
@@ -31,6 +33,8 @@ export class AuthService {
       message: "Complete identity verification to unlock your first loan.",
       type: "welcome",
     });
+
+    await emailService.sendWelcomeEmail(user.email || "", user.fullName);
 
     const token = generateToken({ id: user.id, phone: user.phone, role: "user" });
     return { user, token };
