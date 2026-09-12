@@ -14,6 +14,13 @@ Base: `http://localhost:5000/api`
 - `DELETE /users/account` - `{ password }` - Auth required. Soft-deletes the account (isActive=false). Blocked with 409 if an active/approved/pending loan exists.
 - `GET /users/verifications` - Auth required. Returns the borrower's own verification submissions (type, status, adminNote, timestamps).
 
+## Notifications
+- `GET /notifications/me` - Auth required. Latest 50 notifications.
+- `GET /notifications/me/unread-count` - Auth required. `{ count }`.
+- `PUT /notifications/:id/read` - Auth required.
+- `PUT /notifications/read-all` - Auth required.
+- Socket: server emits `notification:new` into `user:<id>` rooms on welcome, loan submitted/approved/rejected/overdue, repayment reminder, loan repaid and verification approved/rejected. Client can emit `notification:markRead` / `notification:markAllRead`.
+
 ## Loans
 - `POST /loans/apply` - `{ amount, purpose? }` - Auth required
 - `GET /loans` - Auth required

@@ -1,6 +1,7 @@
 import { Server as SocketServer } from "socket.io";
 import { verifyToken } from "../utils/generateToken";
 import { logger } from "../utils/logger";
+import { setupNotificationsSocket } from "./notifications.socket";
 
 export function setupSocket(io: SocketServer) {
   io.use((socket, next) => {
@@ -28,6 +29,8 @@ export function setupSocket(io: SocketServer) {
     socket.on("countdown:subscribe", (loanId: string) => {
       socket.join(`loan:${loanId}`);
     });
+
+    setupNotificationsSocket(io, socket);
 
     socket.on("disconnect", () => {
       logger.info(`Socket disconnected: ${user.phone}`);
