@@ -4,6 +4,8 @@ import { Prisma } from "@prisma/client";
 import prisma from "../config/db";
 import { updateProfileSchema, changePasswordSchema, deleteAccountSchema } from "../utils/validators";
 import { IN_PROGRESS_LOAN_STATUSES } from "../constants/loan";
+import { generateToken } from "../utils/generateToken";
+import { cookieOptions, clearCookieOptions } from "../constants/session";
 
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
   try {
@@ -52,6 +54,11 @@ export async function changePassword(req: Request, res: Response, next: NextFunc
       data: { password: hashed },
     });
 
+    // Rotate the session token after a credential change so any token
+    // issued before the change carries the stale login session.
+    const token = generateToken({ id: user.id, phone: user.phone, role: "user" });
+    res.cookie("token", token, cookieOptions());
+
     res.json({ message: "Password updated successfully" });
   } catch (error) {
     next(error);
@@ -80,7 +87,7 @@ export async function deleteAccount(req: Request, res: Response, next: NextFunct
       data: { isActive: false },
     });
 
-    res.clearCookie("token");
+    res.clearCookie("token", clearCookieOptions());
     res.json({ message: "Account deactivated" });
   } catch (error) {
     next(error);

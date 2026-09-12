@@ -12,6 +12,7 @@ import userRoutes from "./routes/user.routes";
 import notificationRoutes from "./routes/notification.routes";
 import { errorHandler } from "./middleware/error.middleware";
 import { apiLimiter } from "./middleware/rateLimiter";
+import { sameOriginGuard } from "./middleware/security.middleware";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 if (process.env.NODE_ENV !== "production") app.use(morgan("dev"));
 
 app.use("/api", apiLimiter);
+app.use("/api", sameOriginGuard);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/notifications", notificationRoutes);

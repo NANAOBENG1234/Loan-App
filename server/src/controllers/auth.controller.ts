@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/auth.service";
 import { registerSchema, loginSchema } from "../utils/validators";
+import { cookieOptions, clearCookieOptions } from "../constants/session";
 
 const authService = new AuthService();
 
@@ -9,12 +10,7 @@ export async function register(req: Request, res: Response, next: NextFunction) 
     const data = registerSchema.parse(req.body);
     const result = await authService.register(data);
 
-    res.cookie("token", result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", result.token, cookieOptions());
 
     res.status(201).json(result);
   } catch (error) {
@@ -27,12 +23,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const data = loginSchema.parse(req.body);
     const result = await authService.login(data);
 
-    res.cookie("token", result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", result.token, cookieOptions());
 
     res.json(result);
   } catch (error) {
@@ -41,7 +32,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function logout(_req: Request, res: Response) {
-  res.clearCookie("token");
+  res.clearCookie("token", clearCookieOptions());
   res.json({ message: "Logged out" });
 }
 
