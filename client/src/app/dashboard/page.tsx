@@ -79,7 +79,7 @@ export default function DashboardPage() {
             <Loader size="sm" />
           ) : activeLoan && activeLoan.status === "active" ? (
             <div className="space-y-3">
-              <ActiveLoanCard loan={activeLoan} />
+              <ActiveLoanCard loan={activeLoan} onClick={() => router.push(`/dashboard/loans/${activeLoan.id}`)} />
               <Button fullWidth onClick={() => setShowRepayment(true)}>
                 Repay Now
               </Button>

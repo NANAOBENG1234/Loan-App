@@ -6,13 +6,17 @@ import { CountdownTimer } from "./CountdownTimer";
 
 interface ActiveLoanCardProps {
   loan: Loan;
+  onClick?: () => void;
 }
 
-export function ActiveLoanCard({ loan }: ActiveLoanCardProps) {
+export function ActiveLoanCard({ loan, onClick }: ActiveLoanCardProps) {
   const totalDue = loan.amount + (loan.amount * loan.interestRate) / 100;
 
   return (
-    <div className="bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-5 text-white">
+    <div
+      onClick={onClick}
+      className={`bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-5 text-white ${onClick ? "cursor-pointer hover:shadow-lg transition-all active:scale-[0.99]" : ""}`}
+    >
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-white/70">Active Loan</p>
         <span className="chip bg-white/20 text-white">{loan.status}</span>
