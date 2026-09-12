@@ -1,4 +1,5 @@
 import api from "./api";
+import { Verification } from "@/types/user.types";
 
 export interface UpdateProfileInput {
   fullName?: string;
@@ -24,6 +25,11 @@ export const userService = {
 
   async deleteAccount(password: string) {
     const res = await api.delete("/users/account", { data: { password } });
+    return res.data;
+  },
+
+  async getVerifications(): Promise<Verification[]> {
+    const res = await api.get("/users/verifications");
     return res.data;
   },
 };
