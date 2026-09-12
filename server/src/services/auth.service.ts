@@ -3,6 +3,7 @@ import prisma from "../config/db";
 import { generateToken } from "../utils/generateToken";
 import { RegisterInput, LoginInput } from "../types/auth.types";
 import { NotificationService } from "./notification.service";
+import { IN_PROGRESS_LOAN_STATUSES } from "../constants/loan";
 
 const notificationService = new NotificationService();
 
@@ -59,7 +60,7 @@ export class AuthService {
     if (!user) throw new Error("User not found");
 
     const activeLoan = await prisma.loan.findFirst({
-      where: { userId, status: { in: ["active", "approved", "pending"] } },
+      where: { userId, status: { in: [...IN_PROGRESS_LOAN_STATUSES] } },
       orderBy: { createdAt: "desc" },
     });
 

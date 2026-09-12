@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { Prisma } from "@prisma/client";
 import prisma from "../config/db";
 import { updateProfileSchema, changePasswordSchema, deleteAccountSchema } from "../utils/validators";
+import { IN_PROGRESS_LOAN_STATUSES } from "../constants/loan";
 
 export async function updateProfile(req: Request, res: Response, next: NextFunction) {
   try {
@@ -68,7 +69,7 @@ export async function deleteAccount(req: Request, res: Response, next: NextFunct
     if (!valid) return res.status(401).json({ message: "Incorrect password" });
 
     const activeLoan = await prisma.loan.findFirst({
-      where: { userId: user.id, status: { in: ["active", "approved", "pending"] } },
+      where: { userId: user.id, status: { in: [...IN_PROGRESS_LOAN_STATUSES] } },
     });
     if (activeLoan) {
       return res.status(409).json({ message: "Deactivate active loans before deleting your account" });

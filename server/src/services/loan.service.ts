@@ -1,6 +1,7 @@
 import prisma from "../config/db";
 import { calculateLoanRepayment } from "../utils/calculateLoan";
 import { getLoanLevel, getNextLevel } from "../constants/loanLevels";
+import { IN_PROGRESS_LOAN_STATUSES } from "../constants/loan";
 import { getIO } from "../config/socket";
 import { HttpError } from "../utils/HttpError";
 import { NotificationService } from "./notification.service";
@@ -13,7 +14,7 @@ export class LoanService {
     if (!user) throw new HttpError(404, "User not found");
 
     const activeLoan = await prisma.loan.findFirst({
-      where: { userId, status: { in: ["active", "approved", "pending"] } },
+      where: { userId, status: { in: [...IN_PROGRESS_LOAN_STATUSES] } },
     });
     if (activeLoan) throw new HttpError(409, "You already have an active loan. Repay it first.");
 
@@ -54,7 +55,7 @@ export class LoanService {
 
   async getCurrentLoan(userId: string) {
     return prisma.loan.findFirst({
-      where: { userId, status: { in: ["active", "approved", "pending"] } },
+      where: { userId, status: { in: [...IN_PROGRESS_LOAN_STATUSES] } },
       include: { repayments: { orderBy: { dueDate: "asc" } } },
       orderBy: { createdAt: "desc" },
     });
