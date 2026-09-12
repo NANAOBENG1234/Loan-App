@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticateAdmin } from "../middleware/admin.middleware";
-import { authLimiter } from "../middleware/rateLimiter";
+import { authIpLimiter, adminLoginLimiter } from "../middleware/authLimiter";
 import {
   adminLogin, getDashboardStats, getAllUsers, getAllLoans,
   approveLoan, rejectLoan, getVerifications,
@@ -10,7 +10,7 @@ import {
 
 const router = Router();
 
-router.post("/login", authLimiter, adminLogin);
+router.post("/login", authIpLimiter, adminLoginLimiter, adminLogin);
 router.get("/dashboard", authenticateAdmin, getDashboardStats);
 router.get("/users", authenticateAdmin, getAllUsers);
 router.put("/users/:id/level", authenticateAdmin, updateUserLevel);
