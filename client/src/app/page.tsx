@@ -18,7 +18,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/80 backdrop-blur-lg shadow-sm" : "bg-transparent"}`}>
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <span className="text-xl font-extrabold text-gradient">QuickLoan</span>
+          <span className="text-xl font-extrabold text-gradient">BoA Micro Finance</span>
           <div className="flex items-center gap-3">
             <Link href="/login" className="btn-ghost">Sign In</Link>
             <Link href="/register" className="btn-primary !py-2 !px-4">Get Started</Link>
@@ -91,7 +91,7 @@ export default function LandingPage() {
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-3">Why Choose QuickLoan?</h2>
+            <h2 className="text-3xl font-bold mb-3">Why Choose BoA Micro Finance?</h2>
             <p className="text-secondary-500">Designed for Ghanaians, by Ghanaians</p>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -166,7 +166,7 @@ export default function LandingPage() {
       <section className="py-20 px-4 bg-gradient-to-r from-primary-500 to-primary-700">
         <div className="max-w-2xl mx-auto text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-white/80 mb-8">Join thousands of Ghanaians using QuickLoan for their financial needs.</p>
+          <p className="text-white/80 mb-8">Join thousands of Ghanaians using BoA Micro Finance for their financial needs.</p>
           <Link href="/register" className="inline-block bg-white text-primary-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-50 transition-colors">
             Create Free Account
           </Link>
@@ -201,14 +201,14 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-secondary-900 text-white py-12 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-2xl font-bold text-gradient mb-4">QuickLoan</p>
+          <p className="text-2xl font-bold text-gradient mb-4">BoA Micro Finance</p>
           <p className="text-secondary-400 text-sm mb-6">Fast, trusted mobile loans in Ghana</p>
           <div className="flex justify-center gap-6 text-sm text-secondary-400 mb-6">
             <span>Terms of Service</span>
             <span>Privacy Policy</span>
             <span>Contact Us</span>
           </div>
-          <p className="text-xs text-secondary-500">&copy; {new Date().getFullYear()} QuickLoan. All rights reserved.</p>
+          <p className="text-xs text-secondary-500">&copy; {new Date().getFullYear()} BoA Micro Finance. All rights reserved.</p>
         </div>
       </footer>
     </div>

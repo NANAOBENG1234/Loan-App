@@ -19,7 +19,7 @@ export function AdminSidebar() {
       {/* Desktop sidebar */}
       <aside className="fixed left-0 top-0 bottom-0 w-64 bg-secondary-900 text-white overflow-y-auto hidden lg:block">
         <div className="p-5 border-b border-secondary-700">
-          <Link href="/admin/dashboard" className="text-lg font-bold">QuickLoan Admin</Link>
+          <Link href="/admin/dashboard" className="text-lg font-bold">BoA Micro Finance Admin</Link>
         </div>
         <nav className="p-4 space-y-1">
           {links.map((link) => {

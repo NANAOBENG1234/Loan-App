@@ -9,7 +9,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-50/50 to-white px-4 py-8">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-extrabold text-gradient">QuickLoan</Link>
+          <Link href="/" className="text-2xl font-extrabold text-gradient">BoA Micro Finance</Link>
           <h1 className="text-2xl font-bold mt-6 mb-1">Welcome Back</h1>
           <p className="text-sm text-secondary-500">Sign in to continue</p>
         </div>
