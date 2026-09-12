@@ -59,6 +59,30 @@ export class LoanService {
     return loan;
   }
 
+  /** Loan + context the detail page needs (level capacity, totals, countdown). */
+  async getLoanWithContext(loanId: string, userId: string) {
+    const loan = await this.getLoanById(loanId, userId);
+
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { loanLevel: true } });
+    const level = getLoanLevel(user?.loanLevel || 1);
+    const nextLevel = getNextLevel(user?.loanLevel || 1);
+
+    const totalDue = loan.amount + (loan.amount * loan.interestRate) / 100;
+    const daysRemaining = loan.dueDate
+      ? Math.max(0, Math.ceil((new Date(loan.dueDate).getTime() - Date.now()) / 86400000))
+      : null;
+
+    return {
+      ...loan,
+      totalDue,
+      daysRemaining,
+      level: { name: level.name, maxAmount: level.maxAmount, repaymentDays: level.repaymentDays },
+      nextLevel: nextLevel
+        ? { level: nextLevel.level, name: nextLevel.name, maxAmount: nextLevel.maxAmount }
+        : null,
+    };
+  }
+
   async approveLoan(loanId: string, adminId: string) {
     const loan = await prisma.loan.findUnique({ where: { id: loanId } });
     if (!loan) throw new HttpError(404, "Loan not found");

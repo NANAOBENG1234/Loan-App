@@ -47,7 +47,7 @@ export async function getCurrentLoan(req: Request, res: Response, next: NextFunc
 
 export async function getLoanDetails(req: Request, res: Response, next: NextFunction) {
   try {
-    const loan = await loanService.getLoanById(req.params.id, req.user!.id);
+    const loan = await loanService.getLoanWithContext(req.params.id, req.user!.id);
     res.json(loan);
   } catch (error) {
     next(error);
