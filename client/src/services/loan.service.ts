@@ -1,5 +1,5 @@
 import api from "./api";
-import { Loan } from "@/types/auth.types";
+import { Loan, LoanDetail } from "@/types/auth.types";
 
 export const loanService = {
   async apply(data: { amount: number; purpose?: string }) {
@@ -17,7 +17,7 @@ export const loanService = {
     return res.data;
   },
 
-  async getById(id: string): Promise<Loan> {
+  async getById(id: string): Promise<LoanDetail> {
     const res = await api.get(`/loans/${id}`);
     return res.data;
   },

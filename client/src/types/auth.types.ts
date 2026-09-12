@@ -30,6 +30,13 @@ export interface Loan {
 
 export type LoanStatus = "pending" | "approved" | "active" | "repaid" | "overdue" | "rejected" | "expired";
 
+export interface LoanDetail extends Loan {
+  totalDue: number;
+  daysRemaining: number | null;
+  level: { name: string; maxAmount: number; repaymentDays: number };
+  nextLevel: { level: number; name: string; maxAmount: number } | null;
+}
+
 export interface Repayment {
   id: string;
   loanId: string;
