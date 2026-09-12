@@ -99,6 +99,33 @@ export default function DashboardPage() {
                 Repay Now
               </Button>
             </div>
+          ) : activeLoan && activeLoan.status === "approved" ? (
+            <div className="card text-center py-8">
+              <p className="text-lg font-semibold mb-1">Loan Approved</p>
+              <p className="text-sm text-secondary-500 mb-4">
+                Your loan of {formatCurrency(activeLoan.amount)} is approved. Repay{" "}
+                {formatCurrency(activeLoan.amount + (activeLoan.amount * activeLoan.interestRate) / 100)} when ready.
+              </p>
+              <div className="flex flex-col gap-2">
+                <Button fullWidth onClick={() => setShowRepayment(true)}>Repay Now</Button>
+                <Button fullWidth variant="ghost" onClick={() => router.push(`/dashboard/loans/${activeLoan.id}`)}>
+                  View Loan Details
+                </Button>
+              </div>
+            </div>
+          ) : activeLoan && activeLoan.status === "overdue" ? (
+            <div className="card text-center py-8">
+              <p className="text-lg font-semibold mb-1">Loan Overdue</p>
+              <p className="text-sm text-secondary-500 mb-4">
+                Your loan of {formatCurrency(activeLoan.amount)} is overdue. Repay it to unlock your next loan.
+              </p>
+              <div className="flex flex-col gap-2">
+                <Button fullWidth onClick={() => setShowRepayment(true)}>Repay Now</Button>
+                <Button fullWidth variant="ghost" onClick={() => router.push(`/dashboard/loans/${activeLoan.id}`)}>
+                  View Loan Details
+                </Button>
+              </div>
+            </div>
           ) : activeLoan && activeLoan.status === "pending" ? (
             <div className="card text-center py-8">
               <p className="text-lg font-semibold mb-1">Loan Pending</p>
