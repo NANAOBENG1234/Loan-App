@@ -92,9 +92,9 @@ export default function ProfilePage() {
           </div>
           <div className="flex justify-between items-center py-2">
             <span className="text-sm text-secondary-500">Verified</span>
-            <span className={user?.verified ? "chip chip-paid" : "chip chip-pending"}>
-              {user?.verified ? "Verified" : "Unverified"}
-            </span>
+            <button className={`${user?.verified ? "chip chip-paid" : "chip chip-pending"} hover:opacity-80`} onClick={() => router.push("/dashboard/verification")}>
+              {user?.verified ? "Verified" : "Unverified"} ›
+            </button>
           </div>
           <div className="flex justify-between items-center py-2">
             <span className="text-sm text-secondary-500">Member Since</span>

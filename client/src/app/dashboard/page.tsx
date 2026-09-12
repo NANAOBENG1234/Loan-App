@@ -15,15 +15,19 @@ import { RepaymentForm } from "@/components/forms/RepaymentForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useAuthStore } from "@/store/authStore";
 import { loanService } from "@/services/loan.service";
+import { userService } from "@/services/user.service";
 import { Loan } from "@/types/auth.types";
+import { Verification } from "@/types/user.types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { LOAN_LEVELS } from "@/utils/constants";
+import { verificationProgress } from "@/utils/verificationStatus";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useAuth();
   const user = useAuthStore((s) => s.user);
   const [activeLoan, setActiveLoan] = useState<Loan | null>(null);
+  const [verifications, setVerifications] = useState<Verification[]>([]);
   const [showLoanForm, setShowLoanForm] = useState(false);
   const [showRepayment, setShowRepayment] = useState(false);
   const [loadingLoan, setLoadingLoan] = useState(true);
@@ -35,6 +39,7 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isAuthenticated) {
       loanService.getCurrent().then(setActiveLoan).finally(() => setLoadingLoan(false));
+      userService.getVerifications().then(setVerifications).catch(() => {});
     }
   }, [isAuthenticated]);
 
@@ -49,6 +54,8 @@ export default function DashboardPage() {
     show: { opacity: 1, y: 0 },
   };
 
+  const vProgress = verificationProgress(verifications);
+
   return (
     <div className="min-h-screen bg-gray-50 pb-20 lg:pb-0">
       <DashboardHeader />
@@ -61,11 +68,19 @@ export default function DashboardPage() {
           <motion.div variants={item} className="card flex flex-col justify-between">
             <p className="text-sm text-secondary-500">Status</p>
             {user?.verified ? (
-              <span className="chip chip-paid mt-1">Verified</span>
+              <div>
+                <span className="chip chip-paid mt-1">Verified</span>
+                <button className="block text-xs text-primary-500 mt-1" onClick={() => router.push("/dashboard/verification")}>
+                  View verification →
+                </button>
+              </div>
             ) : (
               <div>
-                <span className="chip chip-pending">Unverified</span>
-                <Button size="sm" variant="ghost" className="mt-2 !p-0 !text-primary-500" onClick={() => router.push("/dashboard/verification/selfie")}>
+                <span className="chip chip-pending mt-1">Unverified</span>
+                <p className="text-xs text-secondary-400 mt-1">
+                  {vProgress.done}/{vProgress.total} documents approved
+                </p>
+                <Button size="sm" variant="ghost" className="mt-1 !p-0 !text-primary-500" onClick={() => router.push("/dashboard/verification")}>
                   Verify now →
                 </Button>
               </div>
