@@ -13,6 +13,16 @@
 }
 
 @layer components {
+  /* Borrower app shell: 375px design, capped at 430px, centered on large screens. */
+  .app-backdrop {
+    @apply min-h-screen w-full flex justify-center bg-secondary-100/70;
+  }
+  .app-shell {
+    @apply w-full max-w-[430px] min-h-screen relative bg-secondary-50 safe-area-top
+           lg:shadow-2xl lg:border-x lg:border-secondary-200;
+  }
+  .safe-area-top { padding-top: env(safe-area-inset-top, 0px); }
+  .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .glass-card {
     @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-glass rounded-2xl;
   }

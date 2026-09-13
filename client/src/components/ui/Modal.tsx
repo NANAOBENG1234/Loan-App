@@ -32,7 +32,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-y-auto shadow-xl z-10 p-6"
+            className="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-[430px] max-h-[90vh] overflow-y-auto shadow-xl z-10 p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
           >
             {title && (
               <div className="flex items-center justify-between mb-4">
